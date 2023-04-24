@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'chart/chart.dart';
 import 'expenses_list/expenses_list.dart';
 import '../models/expense.dart';
 import 'new_expense.dart';
@@ -29,6 +30,8 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      //né khung
+      useSafeArea: true,
       // chiếm hết màn hình
       isScrollControlled: true,
       context: context,
@@ -65,6 +68,9 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     Widget mainContent = const Center(
       child: Text('No expenses found. Start adding some!'),
     );
@@ -83,14 +89,23 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Text('Chart'),
-          Expanded(
-            child: mainContent,
-          ),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(child: Chart(expenses: _registeredExpenses)),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            ),
     );
   }
 }

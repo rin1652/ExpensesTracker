@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../models/expense.dart';
 
@@ -74,91 +75,97 @@ class _NewExpenseState extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
-      child: Column(
-        children: [
-          TextField(
-            controller: _titleController,
-            maxLength: 50,
-            decoration: const InputDecoration(labelText: 'Title'),
-          ),
-          Row(
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    return SizedBox(
+      height: double.infinity,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16, 48, 16, 16 + keyboardSpace),
+          child: Column(
             children: [
-              Expanded(
-                child: TextField(
-                  controller: _amountController,
-                  maxLength: 10,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                      labelText: 'Amount', prefix: Text('đ')),
-                ),
-                flex: 3,
+              TextField(
+                controller: _titleController,
+                maxLength: 50,
+                decoration: const InputDecoration(labelText: 'Title'),
               ),
-              Expanded(
-                flex: 3,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: _presentDatePicker,
-                      child: Text(
-                        _selectedDate == null
-                            ? 'No date selected'
-                            : formatter.format(_selectedDate!),
-                      ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _amountController,
+                      maxLength: 10,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                          labelText: 'Amount', prefix: Text('đ')),
                     ),
-                    Expanded(
-                      child: IconButton(
-                        icon: const Icon(Icons.calendar_month),
-                        onPressed: _presentDatePicker,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            children: [
-              DropdownButton(
-                value: _selectedCategory,
-                items: Category.values
-                    .map(
-                      (category) => DropdownMenuItem(
-                        value: category,
-                        child: Text(
-                          category.name.toString(),
+                    flex: 3,
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: _presentDatePicker,
+                          child: Text(
+                            _selectedDate == null
+                                ? 'No date selected'
+                                : formatter.format(_selectedDate!),
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  if (value == null) {
-                    return;
-                  }
-                  setState(() {
-                    _selectedCategory = value;
-                  });
-                },
+                        Expanded(
+                          child: IconButton(
+                            icon: const Icon(Icons.calendar_month),
+                            onPressed: _presentDatePicker,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              const Spacer(),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Cancel'),
+              const SizedBox(
+                height: 16,
               ),
-              ElevatedButton(
-                onPressed: _submitExpenseData,
-                child: const Text('Add Expense'),
-              ),
+              Row(
+                children: [
+                  DropdownButton(
+                    value: _selectedCategory,
+                    items: Category.values
+                        .map(
+                          (category) => DropdownMenuItem(
+                            value: category,
+                            child: Text(
+                              category.name.toString(),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      if (value == null) {
+                        return;
+                      }
+                      setState(() {
+                        _selectedCategory = value;
+                      });
+                    },
+                  ),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _submitExpenseData,
+                    child: const Text('Add Expense'),
+                  ),
+                ],
+              )
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
