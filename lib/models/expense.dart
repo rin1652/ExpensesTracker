@@ -3,7 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
 const uuid = Uuid();
-
+const kcolor = Colors.amber;
 final formatter = DateFormat('dd/MM/yyyy');
 
 enum Category { food, travel, leisure, work }
